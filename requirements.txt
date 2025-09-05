@@ -1,2 +1,9 @@
 Flask==2.3.2
 gunicorn==21.2.0
+streamlit>=1.30.0
+pandas
+numpy
+matplotlib
+scikit-learn
+plotly
+requests

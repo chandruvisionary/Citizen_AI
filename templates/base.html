@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CitizenAI - Your AI-powered assistant for government services{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="nav-brand">CitizenAI</a>
+            <ul class="nav-links">
+                {% if session.user_id %}
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('chat') }}">Chat</a></li>
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><span>👋 {{ session.user_name }}</span></li>
+                    <li><button id="theme-toggle" class="btn btn-secondary" title="Toggle theme">🌓</button></li>
+                    <li><a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><button id="theme-toggle" class="btn btn-secondary" title="Toggle theme">🌓</button></li>
+                    <li><a href="{{ url_for('login') }}" class="btn btn-primary">Login</a></li>
+                    <li><a href="{{ url_for('signup') }}" class="btn btn-secondary">Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container" style="margin-top: 100px;">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'error' if category == 'error' else category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 CitizenAI. Built with Flask, SQLite, and IBM Granite AI.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+    
+    <!-- Theme toggle functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            
+            // Check for saved theme preference or default to light theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            // Apply the saved theme
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-theme');
+                body.classList.remove('light-theme');
+                themeToggle.textContent = '☀️';
+                themeToggle.title = 'Switch to light theme';
+            } else {
+                body.classList.add('light-theme');
+                body.classList.remove('dark-theme');
+                themeToggle.textContent = '🌙';
+                themeToggle.title = 'Switch to dark theme';
+            }
+            
+            // Theme toggle functionality
+            themeToggle.addEventListener('click', function() {
+                if (body.classList.contains('dark-theme')) {
+                    // Switch to light theme
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                    themeToggle.textContent = '🌙';
+                    themeToggle.title = 'Switch to dark theme';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    // Switch to dark theme
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                    themeToggle.textContent = '☀️';
+                    themeToggle.title = 'Switch to light theme';
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

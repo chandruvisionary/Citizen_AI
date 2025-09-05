@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Login - CitizenAI{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card fade-in">
+        <h2 class="text-center mb-3">Login CitizenAI</h2>
+        <p class="text-center mb-3" style="color: #666;">Enter your account to get started</p>
+        
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" 
+                       placeholder="Enter your email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" 
+                       placeholder="Enter your password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+        </form>
+        
+        <p class="text-center mt-3">
+            Don't have an account? <a href="{{ url_for('signup') }}" style="color: #4285f4;">Sign up here</a>
+        </p>
+        
+        <p class="text-center mt-2">
+            <a href="{{ url_for('index') }}" style="color: #666;">Back to Home</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

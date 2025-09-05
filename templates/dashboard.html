@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback Dashboard - CitizenAI{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard">
+        <h2 class="text-center mb-3">Feedback Dashboard</h2>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="card stat-card positive">
+                <div class="stat-number">{{ stats.positive }}</div>
+                <div>Positive</div>
+            </div>
+            <div class="card stat-card neutral">
+                <div class="stat-number">{{ stats.neutral }}</div>
+                <div>Neutral</div>
+            </div>
+            <div class="card stat-card negative">
+                <div class="stat-number">{{ stats.negative }}</div>
+                <div>Negative</div>
+            </div>
+            <div class="card stat-card total">
+                <div class="stat-number">{{ stats.total }}</div>
+                <div>Total Feedback</div>
+            </div>
+        </div>
+        
+        <!-- Chart -->
+        {% if stats.total > 0 %}
+        <div class="chart-container">
+            <h3>Sentiment Distribution</h3>
+            <div class="chart-wrapper">
+                <canvas id="sentimentChart"></canvas>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Recent Feedback -->
+        {% if recent_feedback %}
+        <div class="recent-feedback">
+            <h3 class="mb-3">Recent Feedback</h3>
+            {% for feedback in recent_feedback %}
+            <div class="feedback-item">
+                <div class="feedback-content">
+                    <div class="feedback-question">Q: {{ feedback.question[:100] }}{% if feedback.question|length > 100 %}...{% endif %}</div>
+                    <div class="feedback-text">Feedback: {{ feedback.feedback_text[:150] }}{% if feedback.feedback_text|length > 150 %}...{% endif %}</div>
+                </div>
+                <div class="feedback-meta">
+                    <span class="sentiment-badge {{ feedback.sentiment.lower() }}">{{ feedback.sentiment }}</span>
+                    <span>{{ feedback.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card text-center">
+            <h3>No Feedback Yet</h3>
+            <p>Start using the chat feature to provide feedback and see your analytics here.</p>
+            <a href="{{ url_for('chat') }}" class="btn btn-primary">Start Chatting</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if stats.total > 0 %}
+<script>
+    // Create sentiment distribution pie chart
+    const ctx = document.getElementById('sentimentChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Positive', 'Neutral', 'Negative'],
+            datasets: [{
+                data: [{{ stats.positive }}, {{ stats.neutral }}, {{ stats.negative }}],
+                backgroundColor: [
+                    '#28a745',  // Green for positive
+                    '#ffc107',  // Yellow for neutral
+                    '#dc3545'   // Red for negative
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = {{ stats.total }};
+                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                            return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

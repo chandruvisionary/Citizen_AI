@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Home - CitizenAI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card fade-in" style="max-width: 800px; margin: 2rem auto;">
+        <h2>Welcome back, {{ session.user_name }}! 👋</h2>
+        <p class="mb-3">Your AI-powered assistant for government services and citizen queries is ready to help.</p>
+        
+        <!-- Quick Actions -->
+        <div class="features" style="margin: 2rem 0;">
+            <div class="card feature">
+                <div class="feature-icon">💬</div>
+                <h3>Start Chatting</h3>
+                <p>Ask questions and get instant AI-powered responses about government services.</p>
+                <a href="{{ url_for('chat') }}" class="btn btn-primary">Start Chat</a>
+            </div>
+            
+            <div class="card feature">
+                <div class="feature-icon">📊</div>
+                <h3>View Dashboard</h3>
+                <p>Check analytics and insights from citizen feedback and interactions.</p>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">View Dashboard</a>
+            </div>
+            
+            <div class="card feature">
+                <div class="feature-icon">ℹ️</div>
+                <h3>Learn More</h3>
+                <p>Discover how CitizenAI works and how it can help improve public services.</p>
+                <a href="{{ url_for('about') }}" class="btn btn-primary">Learn More</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Getting Started Section -->
+    <div class="getting-started card fade-in" style="max-width: 800px; margin: 2rem auto;">
+        <h2>Getting Started</h2>
+        
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Ask Questions</h4>
+                <p>Use the chat feature to ask any government-related questions.</p>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Provide Feedback</h4>
+                <p>Share your thoughts to help improve government services.</p>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>View Insights</h4>
+                <p>Check the dashboard for community feedback trends.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
